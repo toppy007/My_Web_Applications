@@ -55,6 +55,8 @@ Use `curl` to send the following HTTP request:
   * Method: `GET`
   * Path: `/todos/12`
 
+### (```bash curl https://jsonplaceholder.typicode.com/todos/12```)
+
 You should get the following response body:
 ```
 {
@@ -73,6 +75,8 @@ Use `curl` to send the following HTTP request:
   * Host: `https://jsonplaceholder.typicode.com`
   * Method: `POST`
   * Path: `/todos`
+
+### (```bash curl -X POST https://jsonplaceholder.typicode.com/todos ```)
 
 You should get the following response body:
 ```
