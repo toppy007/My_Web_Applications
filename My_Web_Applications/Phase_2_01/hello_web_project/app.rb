@@ -12,7 +12,14 @@ class Application < Sinatra::Base
     name = params[:name] # The value is 'David'
   
     # Do something with `name`...
-    return "Hello #{name}"
+    return "hello #{name}"
+  end
+
+  get '/names' do
+    name = params[:name] # The value is 'David'
+  
+    # Do something with `name`...
+    return "#{name}"
   end
 
   post '/submit' do
