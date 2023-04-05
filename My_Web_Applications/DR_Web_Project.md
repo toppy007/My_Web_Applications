@@ -138,6 +138,18 @@ end
     return "Hello #{name} you just sent the message #{message}"
   end
 ```
+
+## RSpec writen exaples
+
+-- Request:
+
+GET /names?name=Chris
+
+-- Expected response:
+
+Response for 404 Not Found
+body = Hello Chris
+
 ## Test-Drive a GET & POST request.
 
 We can create integration tests for our routes using RSpec. Here's an example:
