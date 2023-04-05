@@ -10,6 +10,51 @@ describe Application do
   # class so our tests work.
   let(:app) { Application.new }
 
+  context "GET to /" do
+    it 'contains a h1 title' do
+      response = get('/')
+  
+      expect(response.body).to include('<h1>Welcome to my page</h1>')
+    end
+    
+    it 'contains a h1' do
+      response = get('/')
+  
+      expect(response.body).to include('<h1>')
+    end
+  end
+
+  context "GET to /hello" do
+    it 'returns hello message with @name' do
+      response = get('/hello', name: 'Chris')
+  
+      expect(response.body).to include('<h1>Hello Chris!</h1>')
+    end
+    
+    it 'contains a div' do
+      response = get('/hello')
+  
+      expect(response.body).to include('<h1>')
+    end
+  end
+
+  context "GET to /albums/:id" do
+    it 'returns returns an album matching id' do
+      response = get('/albums/2')
+
+      expect(response.status).to eq(200)
+      expect(response.body).to include('<h1> Surfer Rosa </h1>')
+      expect(response.body).to include('release_year: 1988')
+      expect(response.body).to include('')
+    end
+    
+    it 'contains a div' do
+      response = get('/hello')
+  
+      expect(response.body).to include('<h1>')
+    end
+  end
+
   it 'creates new album' do   
     response = post(
       '/albums', 
