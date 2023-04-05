@@ -55,6 +55,22 @@ describe Application do
     end
   end
 
+  context "GET to /artists/:id" do
+    it 'returns matching artists to id' do
+      response = get('/artists/2')
+
+      expect(response.status).to eq(200)
+      expect(response.body).to include('<h1> ABBA </h1>')
+      expect(response.body).to include('genre: Pop')
+    end
+    
+    it 'contains a div' do
+      response = get('/hello')
+  
+      expect(response.body).to include('<h1>')
+    end
+  end
+
   it 'creates new album' do   
     response = post(
       '/albums', 
@@ -70,36 +86,37 @@ describe Application do
     expect(response.body).to include('Voyage')
   end
 
-  it 'test all get method' do
+  it 'test all_albums get method' do
     response = get('/albums')
 
-    body = ('Surfer Rosa, Waterloo, Super Trouper, Bossanova, Lover, Folklore, I Put a Spell on You, Baltimore, Here Comes the Sun, Fodder on My Wings, Ring Ring, Voyage')
-
     expect(response.status).to eq(200)
-    expect(response.body).to eq(body)
+    expect(response.body).to include('a href="/albums/10')
+    expect(response.body).to include('title:  Surfer Rosa')
+    expect(response.body).to include('release_year: 1988')
   end
 
-  it 'tests all artists get request' do
-    response = get('/artists')
-
-    body = 'Pixies, ABBA, Taylor Swift, Nina Simone'
-
-    expect(response.status).to eq(200)
-    expect(response.body).to eq(body)
-  end
-
+  
   it 'test post request for new artist' do
     response = post(
       '/artists', 
       name: 'Wild nothing',
       genre: 'Indie'
     )
-
+    
     expect(response.status).to eq(200)
     expect(response.body).to eq ''
-
+    
     response = get('/artists')
-
+    
     expect(response.body).to include('Wild nothing')
+  end
+  
+  it 'tests all artists get request' do
+    response = get('/artists')
+  
+    expect(response.status).to eq(200)
+    expect(response.body).to include('a href="/artists/1')
+    expect(response.body).to include('name:  ABBA')
+    expect(response.body).to include('genre:  Pop')
   end
 end
