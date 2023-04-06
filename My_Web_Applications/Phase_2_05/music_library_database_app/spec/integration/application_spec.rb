@@ -71,21 +71,6 @@ describe Application do
     end
   end
 
-  it 'creates new album' do   
-    response = post(
-      '/albums', 
-      title: 'Voyage', 
-      releasse_year: '2022', 
-      artist_id: '2'
-    )
-    expect(response.status).to eq(200)
-    expect(response.body).to eq('')
-
-    response = get ('/albums')
-
-    expect(response.body).to include('Voyage')
-  end
-
   it 'test all_albums get method' do
     response = get('/albums')
 
@@ -93,22 +78,6 @@ describe Application do
     expect(response.body).to include('a href="/albums/10')
     expect(response.body).to include('title:  Surfer Rosa')
     expect(response.body).to include('release_year: 1988')
-  end
-
-  
-  it 'test post request for new artist' do
-    response = post(
-      '/artists', 
-      name: 'Wild nothing',
-      genre: 'Indie'
-    )
-    
-    expect(response.status).to eq(200)
-    expect(response.body).to eq ''
-    
-    response = get('/artists')
-    
-    expect(response.body).to include('Wild nothing')
   end
   
   it 'tests all artists get request' do
@@ -118,5 +87,83 @@ describe Application do
     expect(response.body).to include('a href="/artists/1')
     expect(response.body).to include('name:  ABBA')
     expect(response.body).to include('genre:  Pop')
+  end
+
+  context "GET /albums/new" do
+    it 'returns the form page' do
+      response = get('/albums/new')
+  
+      expect(response.status).to eq(200)
+  
+      # Assert we have the correct form tag with the action and method.
+      expect(response.body).to include('form action="/albums" method="POST"')
+  
+      # We can assert more things, like having
+      # the right HTML form inputs, etc.
+    end
+  end
+
+  context "POST /albums" do
+    it 'returns a success page' do
+      # We're now sending a POST request,
+      # simulating the behaviour that the HTML form would have.
+      response = post(
+        '/albums',
+        title: 'Given to fly',
+        release_year: '1999',
+        artist_id: '6'
+      )
+  
+      expect(response.status).to eq(200)
+      expect(response.body).to include('<h1>Album added to database</h1>')
+    end
+  
+    it 'responds with 400 status if parameters are invalid' do
+      response = post(
+        '/albums',
+        title: '',
+        release_year: '',
+        artist_id: ''
+      )
+      expect(response.status).to eq(400)
+    end
+  end
+
+  context "GET /artists/new" do
+    it 'returns the form page' do
+      response = get('/artists/new')
+  
+      expect(response.status).to eq(200)
+  
+      # Assert we have the correct form tag with the action and method.
+      expect(response.body).to include('form action="/artists" method="POST"')
+  
+      # We can assert more things, like having
+      # the right HTML form inputs, etc.
+    end
+  end
+
+  context "POST /artists" do
+    it 'returns a success page' do
+      # We're now sending a POST request,
+      # simulating the behaviour that the HTML form would have.
+      response = post(
+        '/artists',
+        name: 'Pearl Jam',
+        genre: 'Grunge'
+      )
+  
+      expect(response.status).to eq(200)
+      expect(response.body).to include('<h1>Artist added to database</h1>')
+    end
+  
+    it 'responds with 400 status if parameters are invalid' do
+      response = post(
+        '/albums',
+        name: '',
+        genre: ''
+      )
+      expect(response.status).to eq(400)
+    end
   end
 end

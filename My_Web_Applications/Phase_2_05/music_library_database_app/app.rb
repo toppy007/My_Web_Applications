@@ -23,6 +23,10 @@ class Application < Sinatra::Base
 
     return erb(:hello)
   end
+  
+  get '/albums/new' do
+    return erb(:new_album)
+  end
 
   get '/albums/:id' do
     repo = AlbumRepository.new
@@ -41,6 +45,20 @@ class Application < Sinatra::Base
   end
 
   post '/albums' do
+    if invalid_request_parameters?
+      # Set the response code
+      # to 400 (Bad Request) - indicating
+      # to the client it sent incorrect data
+      # in the request.
+      status 400
+  
+      return ''
+    end
+    # Get request body parameters
+    title = params[:title]
+    release_year = params[:release_year]
+    artist_id = params[:artist_id]
+
     repo = AlbumRepository.new
     new_album = Album.new
     new_album.title = params[:title]
@@ -49,7 +67,24 @@ class Application < Sinatra::Base
 
     repo.create(new_album)
 
-    return ''
+    return erb(:added_album)
+  end
+
+  def invalid_request_parameters?
+    # Are the params nil?
+    return true if  params[:title] == nil || 
+                    params[:release_year] == nil || 
+                    params[:artist_id] == nil
+  
+    # Are they empty strings?
+    return true if  params[:title] == "" || 
+                    params[:release_year] == "" || 
+                    params[:artist_id] == ""
+    return false
+  end
+
+  get '/artists/new' do
+    return erb(:new_artist)
   end
 
   get '/artists/:id' do
@@ -59,21 +94,45 @@ class Application < Sinatra::Base
     return erb(:artists)
   end
 
-  
-  post '/artists' do
-    repo = ArtistRepository.new
-    new_artist = Artist.new
-    new_artist.name = params[:name]
-    new_artist.genre = params[:genre]
-    
-    repo.create(new_artist)
-    
-    return ''
-  end 
-
   get '/artists' do
     repo = ArtistRepository.new
     @artist = repo.all 
     return erb(:all_artists)
+  end
+
+  post '/artists' do
+    if invalid_request?
+      # Set the response code
+      # to 400 (Bad Request) - indicating
+      # to the client it sent incorrect data
+      # in the request.
+      status 400
+  
+      return ''
+    end
+    # Get request body parameters
+    name = params[:name]
+    genre = params[:genre]
+
+    repo = ArtistRepository.new
+    new_artist = Artist.new
+    new_artist.name = params[:name]
+    new_artist.genre = params[:genre]
+
+    repo.create(new_artist)
+
+    return erb(:added_artist)
+  end
+
+  def invalid_request?
+    # Are the params nil?
+    return true if  params[:name] == nil || 
+                    params[:genre] == nil
+  
+    # Are they empty strings?
+    return true if  params[:name] == "" || 
+                    params[:genre] == ""
+
+    return false
   end
 end
